@@ -24,7 +24,7 @@ pipeline {
                     githubNotify(
                         result: currentBuild.result,
                         statusDescription: 'Mantenimiento de la database',
-                        authTokenCredentialId: 'github-token-credential-id',
+                        authTokenCredentialId: 'TOKEN_JENKINS',
                         commitSha: env.GIT_COMMIT,
                         context: 'Jenkins'
                     )
