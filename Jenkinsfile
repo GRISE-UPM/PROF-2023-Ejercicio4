@@ -36,7 +36,8 @@ pipeline {
             }
         }
     }
-    // Se notifica el estado a GitHub
+}
+// Se notifica el estado a GitHub
     void setBuildStatus(String message, String state) {
     step([
         $class: "GitHubCommitStatusSetter",
