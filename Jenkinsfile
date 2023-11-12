@@ -19,6 +19,15 @@ pipeline {
 
                     // Se Restauran los datos respaldados anteriormente
                     sh 'sqlite3 Employees.db < Backup.sql'
+
+                    // Se notifica el estado a GitHub
+                    githubNotify(
+                        result: currentBuild.result,
+                        statusDescription: 'Mantenimiento de la database',
+                        authTokenCredentialId: 'github-token-credential-id',
+                        commitSha: env.GIT_COMMIT,
+                        context: 'Jenkins'
+                    )
                 }
             }
         }
