@@ -18,16 +18,7 @@ pipeline {
                     sh 'sqlite3 Employees.db < sqlite.sql'
 
                     // Se Restauran los datos respaldados anteriormente
-                    sh 'sqlite3 Employees.db < Backup.sql'
-
-                    // Se notifica el estado a GitHub
-                    githubNotify(
-                        status: currentBuild.result,
-                        description: 'Mantenimiento de la database',
-                        credentialsId: 'TOKEN_JENKINS',
-                        sha: env.GIT_COMMIT,
-                        context: 'Jenkins'
-                    )
+                    sh 'sqlite3 Employees.db < Backup.sql' 
                 }
             }
         }
@@ -45,4 +36,13 @@ pipeline {
             }
         }
     }
+    // Se notifica el estado a GitHub
+    void setBuildStatus(String message, String state) {
+    step([
+        $class: "GitHubCommitStatusSetter",
+        reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/Luckvill/PROF-2023-Ejercicio4"],
+        contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
+        errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
+        statusResultSource: [$class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]]]
+    ]);
 }
