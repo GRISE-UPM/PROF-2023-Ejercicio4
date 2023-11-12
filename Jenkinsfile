@@ -36,7 +36,9 @@ pipeline {
             }
         }
     }
-    triggers {
+    
+}
+triggers {
         githubPullRequest {
             admin('user_1')
             admins(['user_2', 'user_3'])
@@ -65,4 +67,3 @@ pipeline {
             }
         }
     }
-}
