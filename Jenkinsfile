@@ -22,10 +22,10 @@ pipeline {
 
                     // Se notifica el estado a GitHub
                     githubNotify(
-                        result: currentBuild.result,
-                        statusDescription: 'Mantenimiento de la database',
-                        authTokenCredentialId: 'TOKEN_JENKINS',
-                        commitSha: env.GIT_COMMIT,
+                        status: currentBuild.result,
+                        description: 'Mantenimiento de la database',
+                        credentialsId: 'TOKEN_JENKINS',
+                        sha: env.GIT_COMMIT,
                         context: 'Jenkins'
                     )
                 }
