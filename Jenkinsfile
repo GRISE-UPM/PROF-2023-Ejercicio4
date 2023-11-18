@@ -18,7 +18,7 @@ pipeline {
                     sh 'sqlite3 Employees.db < sqlite.sql'
                     DUMP_FILE="Backup.sql"
                     
-                    awk '/INSERT INTO/ {print}' "$DUMP_FILE" > Backup.sql
+                    awk '/INSERT INTO/ {print}' "$DUMP_FILE" > tmp.sql
                     // Se Restauran los datos respaldados anteriormente
                     sh 'sqlite3 Employees.db < Backup.sql' 
                 }
