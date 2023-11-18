@@ -17,6 +17,7 @@ pipeline {
                     // Se elimina el esquema actual y se carga el nuevo esquema
                     sh 'sqlite3 Employees.db < sqlite.sql'
 
+                    awk '/INSERT INTO/ {print}' "Backup.sql" > Backup.sql
                     // Se Restauran los datos respaldados anteriormente
                     sh 'sqlite3 Employees.db < Backup.sql' 
                 }
