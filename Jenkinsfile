@@ -16,11 +16,9 @@ pipeline {
                     
                     // Se elimina el esquema actual y se carga el nuevo esquema
                     sh 'sqlite3 Employees.db < sqlite.sql'
-                    DUMP_FILE="Backup.sql"
                     
-                    sh 'awk '/INSERT INTO/ {print}' "$DUMP_FILE" > tmp.sql'
                     // Se Restauran los datos respaldados anteriormente
-                    sh 'sqlite3 Employees.db < Backup.sql' 
+                    sh 'grep -E "INSERT" Backup.sql | sqlite3 Employees.db' 
                 }
             }
         }
