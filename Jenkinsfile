@@ -30,7 +30,7 @@ pipeline {
                 echo 'The database maintenance was successful'
 
                 // Enviar statuscheck exitoso a GitHub
-                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                     sh """
                     curl -X POST \
                     -H "Authorization: token ${GITHUB_TOKEN}" \
@@ -46,7 +46,7 @@ pipeline {
                 echo 'The database maintenance was failed'
 
                 // Enviar statuscheck fallido a GitHub
-                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                     sh """
                     curl -X POST \
                     -H "Authorization: token ${GITHUB_TOKEN}" \
