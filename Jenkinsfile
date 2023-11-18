@@ -36,7 +36,7 @@ pipeline {
                     -H "Authorization: token ${GITHUB_TOKEN}" \
                     -H "Accept: application/vnd.github.v3+json" \
                     -d '{"state": "success", "description": "Database maintenance successful", "context": "Jenkins"}' \
-                    https://api.github.com/repos/usuario/repo/statuses/SHA_DEL_COMMIT
+                    https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/770c0f6
                     """
                 }
             }
@@ -52,7 +52,7 @@ pipeline {
                     -H "Authorization: token ${GITHUB_TOKEN}" \
                     -H "Accept: application/vnd.github.v3+json" \
                     -d '{"state": "failure", "description": "Database maintenance failed", "context": "Jenkins"}' \
-                    https://api.github.com/repos/usuario/repo/statuses/SHA_DEL_COMMIT
+                    https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/770c0f6
                     """
                 }
             }
