@@ -28,11 +28,33 @@ pipeline {
         success {
             script {
                 echo 'The database maintenance was successful'
+
+                // Enviar statuscheck exitoso a GitHub
+                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                    sh """
+                    curl -X POST \
+                    -H "Authorization: token ${GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -d '{"state": "success", "description": "Database maintenance successful", "context": "Jenkins"}' \
+                    https://api.github.com/repos/usuario/repo/statuses/SHA_DEL_COMMIT
+                    """
+                }
             }
         }
         failure {
             script {
                 echo 'The database maintenance was failed'
+
+                // Enviar statuscheck fallido a GitHub
+                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                    sh """
+                    curl -X POST \
+                    -H "Authorization: token ${GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -d '{"state": "failure", "description": "Database maintenance failed", "context": "Jenkins"}' \
+                    https://api.github.com/repos/usuario/repo/statuses/SHA_DEL_COMMIT
+                    """
+                }
             }
         }
     }
