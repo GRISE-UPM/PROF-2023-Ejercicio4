@@ -36,7 +36,7 @@ pipeline {
                     -H "Authorization: token ${GITHUB_TOKEN}" \
                     -H "Accept: application/vnd.github.v3+json" \
                     -d '{"state": "success", "description": "Database maintenance successful", "context": "Jenkins"}' \
-                    https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/commitSHA
+                    https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/${commitSHA}
                     """
                 }
             }
