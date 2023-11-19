@@ -32,11 +32,11 @@ pipeline {
                 // Enviar statuscheck exitoso a GitHub
                 withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                     sh """
-                    curl -X POST \
-                    -H "Authorization: token $GITHUB_TOKEN" \
-                    -H "Accept: application/vnd.github.v3+json" \
-                    -d '{"state": "success", "description": "Database maintenance successful", "context": "Jenkins"}' \
-                    https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/${commitSHA}
+                        curl -X POST \
+                        -H 'Authorization: token $GITHUB_TOKEN' \
+                        -H 'Accept: application/vnd.github.v3+json' \
+                        -d '{"state": "success", "description": "Database maintenance successful", "context": "Jenkins"}' \
+                        https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/${commitSHA}
                     """
                 }
             }
