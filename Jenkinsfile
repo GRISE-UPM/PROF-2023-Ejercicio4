@@ -32,7 +32,7 @@ pipeline {
                 // Enviar statuscheck exitoso a GitHub
                 withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                     curl -X POST \
-                    -H "Authorization: token ${GITHUB_TOKEN}" \
+                    -H "Authorization: token $GITHUB_TOKEN" \
                     -H "Accept: application/vnd.github.v3+json" \
                     -d '{"state": "success", "description": "Database maintenance successful", "context": "Jenkins"}' \
                     https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/${commitSHA}
@@ -47,7 +47,7 @@ pipeline {
                 // Enviar statuscheck fallido a GitHub
                 withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                     curl -X POST \
-                    -H "Authorization: token ${GITHUB_TOKEN}" \
+                    -H "Authorization: token $GITHUB_TOKEN" \
                     -H "Accept: application/vnd.github.v3+json" \
                     -d '{"state": "failure", "description": "Database maintenance failed", "context": "Jenkins"}' \
                     https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/${commitSHA}
