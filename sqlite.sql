@@ -58,38 +58,4 @@ CREATE TABLE dependents (
 	relationship text NOT NULL,
 	employee_id INTEGER NOT NULL,
 	FOREIGN KEY (employee_id) REFERENCES employees (employee_id) ON DELETE CASCADE ON UPDATE CASCADE
-);-- Sample INSERT statements for the 'regions' table
-INSERT INTO regions (region_name) VALUES ('North America');
-INSERT INTO regions (region_name) VALUES ('Europe');
-INSERT INTO regions (region_name) VALUES ('Asia');
-
--- Sample INSERT statements for the 'countries' table
-INSERT INTO countries (country_id, country_name, region_id) VALUES ('US', 'United States', 1);
-INSERT INTO countries (country_id, country_name, region_id) VALUES ('CA', 'Canada', 1);
-INSERT INTO countries (country_id, country_name, region_id) VALUES ('FR', 'France', 2);
-INSERT INTO countries (country_id, country_name, region_id) VALUES ('JP', 'Japan', 3);
-
--- Sample INSERT statements for the 'locations' table
-INSERT INTO locations (street_address, postal_code, city, state_province, country_id) VALUES ('123 Main St', '12345', 'New York', 'NY', 'US');
-INSERT INTO locations (street_address, postal_code, city, state_province, country_id) VALUES ('456 Oak St', '67890', 'Toronto', 'ON', 'CA');
-INSERT INTO locations (street_address, postal_code, city, state_province, country_id) VALUES ('789 Elm St', '23456', 'Paris', null, 'FR');
-INSERT INTO locations (street_address, postal_code, city, state_province, country_id) VALUES ('101 Pine St', '98765', 'Tokyo', null, 'JP');
-
--- Sample INSERT statements for the 'departments' table
-INSERT INTO departments (department_name, location_id) VALUES ('HR', 1);
-INSERT INTO departments (department_name, location_id) VALUES ('IT', 2);
-INSERT INTO departments (department_name, location_id) VALUES ('Finance', 3);
-
--- Sample INSERT statements for the 'jobs' table
-INSERT INTO jobs (job_title, min_salary, max_salary) VALUES ('Manager', 50000, 80000);
-INSERT INTO jobs (job_title, min_salary, max_salary) VALUES ('Developer', 60000, 90000);
-INSERT INTO jobs (job_title, min_salary, max_salary) VALUES ('Accountant', 45000, 70000);
-
--- Sample INSERT statements for the 'employees' table
-INSERT INTO employees (first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id) VALUES ('John', 'Doe', 'john.doe@email.com', '123-456-7890', '2023-01-01', 1, 70000, null, 1);
-INSERT INTO employees (first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id) VALUES ('Jane', 'Smith', 'jane.smith@email.com', '987-654-3210', '2023-02-01', 2, 80000, 1, 2);
-INSERT INTO employees (first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id) VALUES ('Bob', 'Johnson', 'bob.johnson@email.com', '111-222-3333', '2023-03-01', 3, 60000, 1, 3);
-
--- Sample INSERT statements for the 'dependents' table
-INSERT INTO dependents (first_name, last_name, relationship, employee_id) VALUES ('Alice', 'Doe', 'Child', 1);
-INSERT INTO dependents (first_name, last_name, relationship, employee_id) VALUES ('Alex', 'Smith', 'Spouse', 2);
+);
