@@ -93,4 +93,3 @@ INSERT INTO employees (first_name, last_name, email, phone_number, hire_date, jo
 -- Sample INSERT statements for the 'dependents' table
 INSERT INTO dependents (first_name, last_name, relationship, employee_id) VALUES ('Alice', 'Doe', 'Child', 1);
 INSERT INTO dependents (first_name, last_name, relationship, employee_id) VALUES ('Alex', 'Smith', 'Spouse', 2);
-INSERT INTO dependents (first_name, last_name, relationship, employee_id) VALUES ('Charlie', 'Johnson', 'Child', 3);
