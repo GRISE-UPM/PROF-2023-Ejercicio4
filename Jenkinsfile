@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Se descarga la base de datos Employees.db
-                    sh 'w1get -O Employees.db https://github.com/Luckvill/PROF-2023-Ejercicio4/raw/main/Employees.db'
+                    sh 'wget -O Employees.db https://github.com/Luckvill/PROF-2023-Ejercicio4/raw/main/Employees.db'
                     
                     // Se hace una copia de los datos actuales
                     sh 'sqlite3 Employees.db ".dump" > Backup.sql'
