@@ -22,65 +22,42 @@ pipeline {
                 }
             }
         }
-        stage('Build and Test') {
-            steps {
-                script {
-                    // Your build and test steps go here
+    }
 
-                    // Simulate the result of your build and test
-                    def buildStatus = 'SUCCESS' // or 'FAILURE' or 'PENDING'
-                    def context = 'ci-check' // This can be any unique identifier for your status check
+    post {
+        success {
+            script {
+                def commitSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                echo 'The database maintenance was successful'
+                // Enviar statuscheck exitoso a GitHub
+                withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
+                    sh """
+                    curl -X POST \
+                    -H "Authorization: token ${GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -d '{"state": "success", "description": "Database maintenance successful", "context": "Jenkins"}' \
+                    https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/commitSHA
+                    """
+                }
+            }
+        }
+        failure {
+            script {
+                def commitSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                echo 'The database maintenance was failed'
 
-                    updateGitHubStatus(buildStatus, context)
+                // Enviar statuscheck fallido a GitHub
+                withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
+                    sh """
+                    curl -X POST \
+                    -H "Authorization: token ${GITHUB_TOKEN}" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -d '{"state": "failure", "description": "Database maintenance failed", "context": "Jenkins"}' \
+                    https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/statuses/commitSHA
+                    """
                 }
             }
         }
     }
+    
 }
-
-def updateGitHubStatus(buildStatus, context) {
-    // Replace these variables with your GitHub repository and token
-    def repoOwner = 'Luckvill'
-    def repoName = 'PROF-2023-Ejercicio4'
-    def commitSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-
-    // GitHub token with repo status scope
-    def githubToken = 'TOKEN_JENKINS'
-
-    // Set the GitHub API URL
-    def apiUrl = "https://api.github.com/repos/${repoOwner}/${repoName}/statuses/${commitSHA}"
-
-    // Map Jenkins status to GitHub status
-    def stateMap = [
-        'SUCCESS': 'success',
-        'FAILURE': 'failure',
-        'PENDING': 'pending'
-    ]
-
-    // Set the GitHub status context and description
-    def statusContext = context
-    def statusDescription = "Jenkins CI - ${buildStatus}"
-
-    // Set the GitHub status state based on the Jenkins build status
-    def statusState = stateMap[buildStatus]
-
-    // Create the payload for the GitHub Status API
-    def statusPayload = [
-        state: statusState,
-        target_url: 'URL_TO_YOUR_CI_JOB_LOGS',
-        description: statusDescription,
-        context: statusContext
-    ]
-
-    // Send a POST request to update the GitHub status
-    def response = httpRequest(
-        acceptType: 'APPLICATION_JSON',
-        contentType: 'APPLICATION_JSON',
-        httpMode: 'POST',
-        requestBody: statusPayload,
-        authentication: "your-github-token:${githubToken}",
-        url: apiUrl
-    )
-
-    echo "GitHub Status API Response: ${response}"
-    }
