@@ -42,7 +42,7 @@ pipeline {
                             https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
                             """
                         } else {
-                            echo 'El webhook ya existe, no es necesario crear uno nuevo.'
+                            echo 'El webhook ya existe.'
                         }
                     }
                 }
@@ -55,10 +55,7 @@ pipeline {
             script {
                 if (env.CHANGE_ID != null) {
                     def pullRequestSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    def githubAPIURL = ''
-
-                    // Enviar status check al repositorio que no es tuyo
-                    def status = '{"state": "success", "description": "Construcción exitosa del Pull Request", "context": "Jenkins"}'
+                    def status = '{"state": "success", "description": "Pull Request build successfull", "context": "Jenkins"}'
                     withCredentials([string(credentialsId: 'TOKEN_REPO_PROFESOR', variable: 'GITHUB_TOKEN')]) {
                         sh """
                         curl -X POST \
@@ -70,9 +67,6 @@ pipeline {
                     }
                 } else {
                     def commitSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    echo 'The database maintenance was successful'
-
-                    // Enviar statuscheck exitoso a GitHub
                     withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                         sh """
                         curl -X POST \
@@ -88,11 +82,8 @@ pipeline {
         failure {
             script {
                 if (env.CHANGE_ID != null) {
-                    // Código para ejecutar cuando falla un pull request en otro repositorio
                     def pullRequestSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-
-                    // Enviar status check fallido al repositorio que no es tuyo
-                    def status = '{"state": "failure", "description": "Construcción fallida del Pull Request", "context": "Jenkins"}'
+                    def status = '{"state": "failure", "description": "Pull Request build failed", "context": "Jenkins"}'
                     withCredentials([string(credentialsId: 'TOKEN_REPO_PROFESOR', variable: 'GITHUB_TOKEN')]) {
                         sh """
                         curl -X POST \
@@ -104,9 +95,6 @@ pipeline {
                     }
                 } else {
                     def commitSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    echo 'The database maintenance was failed'
-
-                    // Enviar statuscheck fallido a GitHub
                     withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                         sh """
                         curl -X POST \
