@@ -37,7 +37,6 @@ pipeline {
                         if (!existingWebhook.contains("$URL")) {
                             echo '1'
                             def payload = '{"name": "Lucas_Martin_Repo", "active": true, "events": ["pull_request"], "config": {"url": "$URL", "content_type": "json"}}'
-                            echo '2'
                             sh """
                             curl -X POST \
                             -H "Authorization: token $GITHUB_TOKEN" \
