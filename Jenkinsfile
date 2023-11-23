@@ -41,7 +41,7 @@ pipeline {
                             content_type: 'json'
                         ]
                     ])
-
+                    echo '2'
                     sh """
                     curl -X POST \
                     -H "Authorization: token $GITHUB_TOKEN" \
