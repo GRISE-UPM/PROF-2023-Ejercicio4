@@ -42,12 +42,13 @@ pipeline {
                                 content_type: 'json'
                             ]
                         ]
+                    def jsonPayload = new groovy.json.JsonBuilder(payload).toPrettyString()
                     echo '2'
                     sh """
                     curl -X POST \
                     -H "Authorization: token $GITHUB_TOKEN" \
                     -H "Accept: application/vnd.github.v3+json" \
-                    -d '${payload}' \
+                    -d '${jsonPayload}' \
                     https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
                     """
                     } else {
