@@ -25,15 +25,17 @@ pipeline {
         stage('Crea el Webhook en caso de que no exista') {
             steps {
                 script {
+                   withCredentials([string(credentialsId: 'TU_TOKEN_DE_ACCESO', variable: 'GITHUB_TOKEN')]) {
+
                     def existingWebhook = sh(
-                        script: 'curl -s -H "Authorization: token TOKEN_REPO_PROFESOR" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
+                        script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
                         returnStdout: true).trim()
 
                     // Verifica si el webhook ya existe en el repo, si no lo crea
                     if (!existingWebhook.contains(${env.JENKINS_URL} + "github-webhook/")) {
                         sh '''
                         curl -X POST \
-                        -H "Authorization: token TOKEN_REPO_PROFESOR" \
+                        -H "Authorization: token $GITHUB_TOKEN" \
                         -H "Accept: application/vnd.github.v3+json" \
                         -d '{
                           "name": "web",
@@ -49,6 +51,7 @@ pipeline {
                     } else {
                         echo 'El webhook ya existe, no es necesario crear uno nuevo.'
                     }
+                }
                 }
             }
         }
