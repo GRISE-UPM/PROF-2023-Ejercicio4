@@ -32,6 +32,7 @@ pipeline {
                         returnStdout: true).trim()
                     echo '1'
                     echo existingWebhook.contains(${env.JENKINS_URL} + "github-webhook/")
+                    echo '2'
                     // Verifica si el webhook ya existe en el repo, si no lo crea
                     if (!existingWebhook.contains(${env.JENKINS_URL} + "github-webhook/")) {
                         echo '2'
