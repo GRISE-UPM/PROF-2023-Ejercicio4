@@ -35,7 +35,7 @@ pipeline {
                         echo "La dirección IP pública de Jenkins es: $URL"
                         // Verifica si el webhook ya existe en el repo, si no lo crea
                         if (!existingWebhook.contains("$URL")) {
-                            def payload = '{"name": "web", "active": true, "events": ["pull_request"], "config": {"url": "$URL", "content_type": "json"}}'                            sh """
+                        def payload = "{\"name\": \"web\", \"active\": true, \"events\": [\"pull_request\"], \"config\": {\"url\": \"$URL\", \"content_type\": \"json\"}}"
                             curl -X POST \
                             -H "Authorization: token $GITHUB_TOKEN" \
                             -H "Accept: application/vnd.github.v3+json" \
