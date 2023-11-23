@@ -25,7 +25,7 @@ pipeline {
         stage('Crea el Webhook en caso de que no exista') {
             steps {
                 script {
-                   withCredentials([string(credentialsId: 'TU_TOKEN_DE_ACCESO', variable: 'GITHUB_TOKEN')]) {
+                   withCredentials([string(credentialsId: 'TOKEN_REPO_PROFESOR', variable: 'GITHUB_TOKEN')]) {
 
                     def existingWebhook = sh(
                         script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
