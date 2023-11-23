@@ -30,8 +30,6 @@ pipeline {
                             script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
                             returnStdout: true).trim()
                         def URL="' + env.JENKINS_URL + 'github-webhook/"
-                        
-                        # Mostrar la URL generada
                         echo "La URL generada es: $URL"
                         // Verifica si el webhook ya existe en el repo, si no lo crea
                         if (!existingWebhook.contains(env.JENKINS_URL + 'github-webhook/')) {
