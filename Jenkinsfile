@@ -25,24 +25,24 @@ pipeline {
         stage('Crea el Webhook en caso de que no exista') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'TOKEN_REPO_PROFESOR', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                         def existingWebhook = sh(
-                            script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
+                            script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/hooks',
                             returnStdout: true).trim()
                         def publicIP = sh(script: 'curl -s ifconfig.me', returnStdout: true).trim()
                         
                         def URL="http://$publicIP/github-webhook/"
                         echo "La dirección IP pública de Jenkins es: $URL"
                         // Verifica si el webhook ya existe en el repo, si no lo crea
-                        if (!existingWebhook.contains(env.JENKINS_URL + 'github-webhook/')) {
-                            def payload = '{"name": "Lucas_Martin_Repo", "active": true, "events": ["pull_request"], "config": {"url": "' + env.JENKINS_URL + 'github-webhook/", "content_type": "json"}}'
+                        if (!existingWebhook.contains($URL)) {
+                            def payload = '{"name": "Lucas_Martin_Repo", "active": true, "events": ["pull_request"], "config": {"url": "$URL", "content_type": "json"}}'
 
                             sh """
                             curl -X POST \
                             -H "Authorization: token $GITHUB_TOKEN" \
                             -H "Accept: application/vnd.github.v3+json" \
                             -d '${payload}' \
-                            https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
+                            https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/hooks
                             """
                         } else {
                             echo 'El webhook ya existe.'
