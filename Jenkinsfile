@@ -32,10 +32,8 @@ pipeline {
                         returnStdout: true).trim()
                     // Verifica si el webhook ya existe en el repo, si no lo crea
                     if (!existingWebhook.contains(env.JENKINS_URL + 'github-webhook/')) {
-                        echo '2'
                         def payload = '{"name": "web", "active": true, "events": ["pull_request"], "config": {"url": "' + env.JENKINS_URL + 'github-webhook/", "content_type": "json"}}'
 
-                    echo '2'
                     sh """
                     curl -X POST \
                     -H "Authorization: token $GITHUB_TOKEN" \
