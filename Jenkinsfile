@@ -32,22 +32,23 @@ pipeline {
                         returnStdout: true).trim()
                     // Verifica si el webhook ya existe en el repo, si no lo crea
                     if (!existingWebhook.contains(env.JENKINS_URL + 'github-webhook/')) {
-                        echo '2'
-                        sh '''
-                        curl -X POST \
-                        -H "Authorization: token $GITHUB_TOKEN" \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        -d '{
-                          "name": "web",
-                          "active": true,
-                          "events": ["pull_request"],
-                          "config": {
-                            "url": env.JENKINS_URL + 'github-webhook/',
-                            "content_type": "json"
-                          }
-                        }' \
-                        https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
-                        '''
+                        def payload = json([
+                        name: 'web',
+                        active: true,
+                        events: ['pull_request'],
+                        config: [
+                            url: env.JENKINS_URL + 'github-webhook/',
+                            content_type: 'json'
+                        ]
+                    ])
+
+                    sh """
+                    curl -X POST \
+                    -H "Authorization: token $GITHUB_TOKEN" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -d '${payload}' \
+                    https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
+                    """
                     } else {
                         echo 'El webhook ya existe, no es necesario crear uno nuevo.'
                     }
