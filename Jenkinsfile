@@ -30,8 +30,6 @@ pipeline {
                     def existingWebhook = sh(
                         script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
                         returnStdout: true).trim()
-                    echo '1'
-                    echo '2'
                     // Verifica si el webhook ya existe en el repo, si no lo crea
                     if (!existingWebhook.contains(env.JENKINS_URL + 'github-webhook/')) {
                         echo '2'
@@ -50,7 +48,6 @@ pipeline {
                         }' \
                         https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
                         '''
-                        echo '3'
                     } else {
                         echo 'El webhook ya existe, no es necesario crear uno nuevo.'
                     }
