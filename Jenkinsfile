@@ -40,7 +40,7 @@ pipeline {
                     curl -X POST \
                     -H "Authorization: token $GITHUB_TOKEN" \
                     -H "Accept: application/vnd.github.v3+json" \
-                    -d '${jsonPayload}' \
+                    -d '${payload}' \
                     https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
                     """
                     } else {
