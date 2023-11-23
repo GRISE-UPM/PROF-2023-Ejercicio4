@@ -31,7 +31,7 @@ pipeline {
                             returnStdout: true).trim()
                         def publicIP = sh(script: 'curl -s ifconfig.me', returnStdout: true).trim()
                         
-                        def URL="http://$publicIP/github-webhook/"
+                        def URL="https://$publicIP/github-webhook/"
                         echo "La dirección IP pública de Jenkins es: $URL"
                         // Verifica si el webhook ya existe en el repo, si no lo crea
                         if (!existingWebhook.contains($URL)) {
