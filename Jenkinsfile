@@ -44,7 +44,7 @@ pipeline {
                             "content_type": "json"
                           }
                         }' \
-                        https://api.github.com/repos/GRISE/PROF-2023-Ejercicio4/hooks
+                        https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
                         '''
                     } else {
                         echo 'El webhook ya existe, no es necesario crear uno nuevo.'
