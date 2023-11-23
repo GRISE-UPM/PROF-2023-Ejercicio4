@@ -29,7 +29,7 @@ pipeline {
                         def existingWebhook = sh(
                             script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/hooks',
                             returnStdout: true).trim()
-                        def URL = "https://" + sh(script: 'curl -s ifconfig.me', returnStdout: true).trim() + "/github-webhook/"
+                        def URL = "https://" + sh(script: 'curl -s ifconfig.me', returnStdout: true).trim() + ":8080/github-webhook/"
                         // Verifica si el webhook ya existe en el repo, si no lo crea
                         if (!existingWebhook.contains("$URL")) {
                         def payload = '{"name": "web", "active": true, "events": ["pull_request"], "config": {"url": "' + URL + '", "content_type": "json"}}'
