@@ -27,7 +27,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                         def existingWebhook = sh(
-                            script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/hooks',
+                            script: 'curl -s -H "Authorization: token $TOKEN_REPO_PROFESOR" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
                             returnStdout: true).trim()
                         def URL = "https://" + sh(script: 'curl -s ifconfig.me', returnStdout: true).trim() + ":8080/github-webhook/"
                         // Verifica si el webhook ya existe en el repo, si no lo crea
@@ -38,7 +38,7 @@ pipeline {
                             -H "Authorization: token $GITHUB_TOKEN" \
                             -H "Accept: application/vnd.github.v3+json" \
                             -d '${payload}' \
-                            https://api.github.com/repos/Luckvill/PROF-2023-Ejercicio4/hooks
+                            https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks
                             """
                         } else {
                             echo 'El webhook ya existe.'
