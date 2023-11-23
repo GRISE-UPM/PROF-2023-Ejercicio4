@@ -42,7 +42,7 @@ pipeline {
                           "active": true,
                           "events": ["pull_request"],
                           "config": {
-                            "url": "env.JENKINS_URL + 'github-webhook/'",
+                            "url": env.JENKINS_URL + 'github-webhook/',
                             "content_type": "json"
                           }
                         }' \
