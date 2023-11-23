@@ -30,7 +30,9 @@ pipeline {
                             script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
                             returnStdout: true).trim()
                         def publicIP = sh(script: 'curl -s ifconfig.me', returnStdout: true).trim()
-                        echo "La dirección IP pública de Jenkins es: http://$publicIP/github-webhook/"
+                        
+                        def URL="http://$publicIP/github-webhook/"
+                        echo "La dirección IP pública de Jenkins es: $URL"
                         // Verifica si el webhook ya existe en el repo, si no lo crea
                         if (!existingWebhook.contains(env.JENKINS_URL + 'github-webhook/')) {
                             def payload = '{"name": "Lucas_Martin_Repo", "active": true, "events": ["pull_request"], "config": {"url": "' + env.JENKINS_URL + 'github-webhook/", "content_type": "json"}}'
