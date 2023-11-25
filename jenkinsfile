@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('script') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                              branches: [[name: 'main']], 
+                              userRemoteConfigs: [[url: 'https://github.com/ehrlz/PROF-2023-Ejercicio4.git', credentialsId: 'github_ehrlz']]])
+                //sh 'sqlite3 Employees.db < sqlite.sql' // schema
+                //sh 'sqlite3 Employees.db < load.sql' // first load
+                sh 'sqlite3 Employees.db ".dump" > backup.txt' // save data
+                // sh 'cat backup.txt'
+                sh 'grep -w "INSERT" backup.txt > backup.sql' // filter data
+                
+                sh 'rm -rf Employees.db' // delete
+                
+                sh 'sqlite3 Employees.db < sqlite.sql' // schema
+                
+                sh 'sqlite3 Employees.db < backup.sql' // data
+            }
+            
+            post {
+                success {
+                    echo 'Database operations completed successfully!'
+                }
+                failure {
+                    echo 'Error occurred during database operations!'
+                    sh 'rm Employees.db'
+                    sh 'sqlite3 Employees.db < sqlite.sql'
+                    sh 'sqlite3 Employees.db < load.sql'
+                }
+                aborted {
+                    echo 'Pipeline aborted!'
+                    sh 'rm Employees.db'
+                    sh 'sqlite3 Employees.db < sqlite.sql'
+                    sh 'sqlite3 Employees.db < load.sql'
+                }
+                cleanup {
+                    sh 'rm backup.sql'
+                }
+            }
+        }
+    }
+}
