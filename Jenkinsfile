@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Mantenimiento de la database') {
+        stage('Mantenimientos de la database') {
             steps {
                 script {
                     // Se descarga la base de datos Employees.db
@@ -29,10 +29,10 @@ pipeline {
                         def existingWebhook = sh(
                             script: 'curl -s -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/GRISE-UPM/PROF-2023-Ejercicio4/hooks',
                             returnStdout: true).trim()
-                        def URL = "http://" + sh(script: 'curl -s ifconfig.me', returnStdout: true).trim() + ":8080/github-webhook/"
+                        def URL = "http://" + sh(script: 'curl -s ifconfig.me', returnStdout: true).trim() + ":8080/ghprbhook/"
                         // Verifica si el webhook ya existe en el repo, si no lo crea
                         if (!existingWebhook.contains("$URL")) {
-                        def payload = '{"name": "web", "active": true, "events": ["pull_request"], "config": {"url": "' + URL + '", "content_type": "json"}}'
+                        def payload = '{"name": "web", "active": true, "events": ["pull_request", "status"], "config": {"url": "' + URL + '", "content_type": "json", "secret": "1234"}}'
                         sh """
                             curl -X POST \
                             -H "Authorization: token $GITHUB_TOKEN" \
@@ -52,9 +52,11 @@ pipeline {
     post {
         success {
             script {
-                if (env.CHANGE_ID != null) {
+                if (env.ghprbActualCommit != null) {
                     def pullRequestSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    def status = '{"state": "success", "description": "Pull Request build successfull", "context": "Jenkins"}'
+                    echo pullRequestSHA
+                    echo '1'
+                    def status = '{"state": "success", "description": "Pull Request build was successful", "context": "Jenkins"}'
                     withCredentials([string(credentialsId: 'TOKEN_REPO_PROFESOR', variable: 'GITHUB_TOKEN')]) {
                         sh """
                         curl -X POST \
@@ -66,6 +68,8 @@ pipeline {
                     }
                 } else {
                     def commitSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    echo commitSHA
+                    echo '2'
                     withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                         sh """
                         curl -X POST \
@@ -80,7 +84,7 @@ pipeline {
         }
         failure {
             script {
-                if (env.CHANGE_ID != null) {
+                if (env.ghprbActualCommit != null) {
                     def pullRequestSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                     def status = '{"state": "failure", "description": "Pull Request build failed", "context": "Jenkins"}'
                     withCredentials([string(credentialsId: 'TOKEN_REPO_PROFESOR', variable: 'GITHUB_TOKEN')]) {
