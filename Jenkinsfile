@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Mantenimientos de la database') {
+        stage('Mantenimiento de la database') {
             steps {
                 script {
                     // Se descarga la base de datos Employees.db
@@ -54,8 +54,6 @@ pipeline {
             script {
                 if (env.ghprbActualCommit != null) {
                     def pullRequestSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    echo pullRequestSHA
-                    echo '1'
                     def status = '{"state": "success", "description": "Pull Request build was successful", "context": "Jenkins"}'
                     withCredentials([string(credentialsId: 'TOKEN_REPO_PROFESOR', variable: 'GITHUB_TOKEN')]) {
                         sh """
@@ -68,8 +66,6 @@ pipeline {
                     }
                 } else {
                     def commitSHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    echo commitSHA
-                    echo '2'
                     withCredentials([string(credentialsId: 'TOKEN_JENKINS', variable: 'GITHUB_TOKEN')]) {
                         sh """
                         curl -X POST \
