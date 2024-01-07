@@ -1,5 +1,30 @@
+def updateGitHubStatus(state, description) {
+         def COMMIT_SHA = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+
+         sh """
+              curl -X POST \
+              -H 'Accept: application/vnd.github.v3+json' \
+              'https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/statuses/$COMMIT_SHA' \
+               -d '{"state": "$state", "context": "$CONTEXT", "description": "$description", "target_url": "$TARGET_URL"}'
+             """
+    }
+
 pipeline {
   agent any
+    environment {
+        nombreBaseDeDatos = "Employees"
+        archivoSQL = "sqlite.sql"
+        nombreBackup="backup.db"
+        REPO_OWNER = 'CarlosD21'
+        REPO_NAME = 'PROF-2023-Ejercicio4'
+        GITHUB_CONTEXT = 'Jenkins'
+        TARGET_URL="http://ec2-54-224-87-86.compute-1.amazonaws.com:8080/"
+        STATE_SUCCESS = 'success'
+        STATE_FAILURE = 'failure'
+        CONTEXT = 'Jenkins'
+        DESCRIPTION_SUCCESS = 'Build successful'
+        DESCRIPTION_FAILURE = 'Build failed'
+}
   stages {
     stage('Checkout') {
       steps {
