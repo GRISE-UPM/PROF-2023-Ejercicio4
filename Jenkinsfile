@@ -3,29 +3,29 @@ pipeline {
   stages {
     stage('Backup of DB') {
       steps {
-        sh 'sqlite3 Employees.db ".mode insert" ".output newBackup.sql" ".dump" ".quit"'
-        sh 'grep "^INSERT INTO" newBackup.sql > backup.sql'
+        sqlite3 Employees.db .mode insert .output newBackup.sql .dump .quit
+        grep INSERT INTO newBackup.sql > backup.sql
         echo '1'
       }
     }
 
     stage('Delete the DB') {
       steps {
-        sh 'rm Employees.db'
+        rm Employees.db
         echo '2'
       }
     }
 
     stage('Load new schema') {
       steps {
-        sh 'sqlite3 Employees.db < sqlite.sql'
+        sqlite3 Employees.db < sqlite.sql
         echo '3'
       }
     }
 
     stage('Restore data') {
       steps {
-        sh 'sqlite3 Employees.db ".read backup.sql" ".quit"'
+        sqlite3 Employees.db .read backup.sql .quit
         echo '4'
       }
     }
