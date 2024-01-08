@@ -3,6 +3,7 @@ pipeline {
   stages {
     stage('Backup of DB') {
       steps {
+        echo 'Entrada 1'
         sqlite3 Employees.db .mode insert .output newBackup.sql .dump .quit
         grep INSERT INTO newBackup.sql > backup.sql
         echo '1'
