@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    enviroment {
+    environment {
 	ESTADO_CORRECTO = 'exito'
 	ESTADO_INCORRECTO = 'fallo'
 	DESCRIPCION_CORRECTA = 'Construccion Correcta'
