@@ -1,6 +1,15 @@
 pipeline {
     agent any
 
+    enviroment {
+	ESTADO_CORRECTO = 'exito'
+	ESTADO_INCORRECTO = 'fallo'
+	DESCRIPCION_CORRECTA = 'Construccion Correcta'
+	DESCRIPCION_ERRONEA = 'Construccion Erronea'
+	DESCRIPCION_INCORRECTA = 'Construccion Fallida'
+	
+    }	
+
     stages {
 
         stage('Database Operations') {
@@ -22,15 +31,15 @@ pipeline {
 
             post {
                 success {
-                    echo 'Database operations completed successfully!'
+                    echo DESCRIPCION_CORRECTA
                 }
                 failure {
-                    echo 'Error occurred during database operations!'
+                    echo DESCRIPCION_ERRONEA
                     sh 'rm Employees.db'
                     sh 'sqlite3 Employees.db < dump.sql'
                 }
                 aborted {
-                    echo 'Pipeline aborted!'
+                    echo DESCRIPCION_INCORRECTA 
                     sh 'rm Employees.db'
                     sh 'sqlite3 Employees.db < dump.sql'
                 }
