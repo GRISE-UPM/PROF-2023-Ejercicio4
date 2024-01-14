@@ -2,8 +2,6 @@ pipeline {
     agent any
 
     environment {
-	ESTADO_CORRECTO = 'exito'
-	ESTADO_INCORRECTO = 'fallo'
 	DESCRIPCION_CORRECTA = 'Construccion Correcta'
 	DESCRIPCION_ERRONEA = 'Construccion Erronea'
 	DESCRIPCION_INCORRECTA = 'Construccion Fallida'
@@ -15,16 +13,16 @@ pipeline {
         stage('Database Operations') {
             steps {
                 script {
-                    // Backup the current data in the database
+                    // Creacion de un archivo de copia de seguridad de los datos actuales de la base de datos
                     sh 'sqlite3 Employees.db .dump > dump.sql'
 
-                    // Remove the existing database file
+                    // Elimminar el archivo de base de datos existentes
                     sh 'rm Employees.db'
 
-                    // Create a new database file and load the new schema from the SQL file
+                    // Crear una nueva base de datos con el nuevo esquema
                     sh 'sqlite3 Employees.db < sqlite.sql'
 
-                    // Restore the previously backed up data
+                    // Restaurar los datos de la copia de seguridad en la nueva base de datos
                     sh 'cat dump.sql | awk \'/^INSERT.*;$/\' | sqlite3 Employees.db'
                 }
             }
@@ -35,12 +33,14 @@ pipeline {
                 }
                 failure {
                     echo DESCRIPCION_ERRONEA
+		    // Elimino los archivos y restauro la los datos de la copia de seguridad	
                     sh 'rm Employees.db'
                     sh 'sqlite3 Employees.db < dump.sql'
                 }
                 aborted {
                     echo DESCRIPCION_INCORRECTA 
                     sh 'rm Employees.db'
+		    // Elimino los archivos y restauro la los datos de la copia de seguridad	
                     sh 'sqlite3 Employees.db < dump.sql'
                 }
                 cleanup {
