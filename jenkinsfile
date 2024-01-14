@@ -1,48 +1,43 @@
 pipeline {
-  agent any
-  stages {
-    stage('Checkout') {
-      steps {
-        git branch: 'main', url: 'https://github.com/GRISE-UPM/PROF-2023-Ejercicio4.git'
-      }
-    }
-    stage('Backup') {
-      steps {
-        sh 'sqlite3 Employees < sqlite.sql'
-      }
-    }
-    stage('Drop') {
-      steps {
-        sh 'echo "DROP DATABASE IF EXISTS Employees;" | sqlite3'
-      }
-    }
-    stage('Create') {
-      steps {
-        sh 'sqlite3 < sqlite.sql'
-      }
-    }
-    stage('Restore') {
-      steps {
-        sh 'sqlite3 Employees < backup.sql'
-      }
-    }
-    stage('Status Check') {
-      steps {
-        script {
-          def status = sh(returnStdout: true, script: 'sqlite3 Employees "SELECT COUNT(*) FROM employees;"').trim()
-          if (status == '0') {
-            status = 'FAILED'
-          } else {
-            status = 'SUCCESS'
-          }
-          step([
-            $class: 'GitHubCommitStatusSetter',
-            commitSha: env.GIT_COMMIT,
-            status: status,
-            context: 'Database maintenance'
-          ])
+    agent any
+
+    stages {
+
+        stage('Database Operations') {
+            steps {
+                script {
+                    // Backup the current data in the database
+                    sh 'sqlite3 Employees.db .dump > dump.sql'
+
+                    // Remove the existing database file
+                    sh 'rm Employees.db'
+
+                    // Create a new database file and load the new schema from the SQL file
+                    sh 'sqlite3 Employees.db < sqlite.sql'
+
+                    // Restore the previously backed up data
+                    sh 'cat dump.sql | awk \'/^INSERT.*;$/\' | sqlite3 Employees.db'
+                }
+            }
+
+            post {
+                success {
+                    echo 'Database operations completed successfully!'
+                }
+                failure {
+                    echo 'Error occurred during database operations!'
+                    sh 'rm Employees.db'
+                    sh 'sqlite3 Employees.db < dump.sql'
+                }
+                aborted {
+                    echo 'Pipeline aborted!'
+                    sh 'rm Employees.db'
+                    sh 'sqlite3 Employees.db < dump.sql'
+                }
+                cleanup {
+                    sh 'rm dump.sql'
+                }
+            }
         }
-      }
     }
-  }
 }
