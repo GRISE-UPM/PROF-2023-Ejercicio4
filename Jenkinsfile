@@ -3,31 +3,31 @@ pipeline {
   stages {
     stage('Backup of DB') {
       steps {
-        echo 'Entrada 1'
-        sh 'sqlite3 Employees.db .mode insert .output newBackup.sql .dump .quit'
-        sh 'grep INSERT INTO newBackup.sql > backup.sql'
+
+        echo 'Borrar anteriores backups'
+        sh 'sudo rm backup.sql'
+
+        echo 'backup de la current db'
+        sh 'sudo sqlite3 Employees.db ".mode insert" ".output backup.sql" ".dump" ".quit"'
         echo '1'
       }
     }
 
     stage('Delete the DB') {
       steps {
-        sh 'rm Employees.db'
-        echo '2'
+        sh 'sudo rm Employees.db'
       }
     }
 
     stage('Load new schema') {
       steps {
-        sh 'sqlite3 Employees.db < sqlite.sql'
-        echo '3'
+        sh 'sudo sqlite3 Employees.db < sqlite.sql'
       }
     }
 
     stage('Restore data') {
       steps {
-        sh 'sqlite3 Employees.db .read backup.sql .quit'
-        echo '4'
+        sh 'sudo sqlite3 Employees.db .read backup.sql .quit'
       }
     }
 
