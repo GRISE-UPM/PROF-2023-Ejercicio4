@@ -4,8 +4,6 @@ pipeline {
     stage('Backup of DB') {
       steps {
 
-        echo 'Borrar anteriores backups'
-        sh 'rm backup.sql'
 
         echo 'backup de la current db'
         sh 'sqlite3 Employees.db ".mode insert" ".output backup.sql" ".dump" ".quit"'
