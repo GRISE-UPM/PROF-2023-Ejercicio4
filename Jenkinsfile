@@ -1,30 +1,33 @@
 pipeline {
   agent any
   stages {
-    stage('Backup of DB') {
+    stage('Copia de la Base de datos') {
       steps {
 
 
-        echo 'backup de la current db'
+        echo 'Copia de la base de datos'
         sh 'sqlite3 Employees.db ".mode insert" ".output backup.sql" ".dump" ".quit"'
-        echo '1'
+        
       }
     }
 
-    stage('Delete the DB') {
+    stage('Eliminar la Base de datos') {
       steps {
+        echo 'Eliminar la base de datos'
         sh 'rm Employees.db'
       }
     }
 
-    stage('Load new schema') {
+    stage('Cargar nuevo schema') {
       steps {
+        echo 'Cargar nuevo schema'
         sh 'sqlite3 Employees.db < sqlite.sql'
       }
     }
 
-    stage('Restore data') {
+    stage('Restaurar Datos') {
       steps {
+        echo 'Restaurar Datos'
         sh 'sqlite3 Employees.db ".read |backup.sql" ".quit"'
       }
     }
