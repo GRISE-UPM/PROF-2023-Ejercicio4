@@ -25,7 +25,7 @@ pipeline {
 
     stage('Restore data') {
       steps {
-        sh 'sqlite3 Employees.db ".read backup.sql" ".quit"'
+        sh 'sqlite3 Employees.db ".read |backup.sql" ".quit"'
       }
     }
 
